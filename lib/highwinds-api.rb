@@ -15,11 +15,19 @@ module HighwindsAPI
       @password = password
   end
 
+  def self.set_token(api_token)
+      @api_token = api_token
+  end
+
   def self.get_token
-    unless (@token_time and Time.now - @token_time < ONE_HOUR_IN_SECONDS)
+    if @api_token
+      @token = @api_token
+      @token_time = Time.now
+    elsif !@token_time or Time.now - @token_time > ONE_HOUR_IN_SECONDS
       @token = Content::get_token
       @token_time = Time.now
     end
+
     @token
   end
 
